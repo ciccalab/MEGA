@@ -7,7 +7,7 @@
 # of mutations in a group of samples as compared to another 
 # group of samples.
 #
-# Input:
+# Inputs:
 # A and B: Boolean matrices of mutations. Coloums are samples, while rows are
 # mutations. The first coloumn must always contain the name of thegene in which
 # the mutation fall.
@@ -31,6 +31,13 @@
 # 
 # Example:
 # gene.sets = list(g1=c("MAST2","ABCA10","ASPM"),g2=c("TP53","ZNF572","MYC"))
+#
+# fdr_th: false discovery rate threshold (default is 0.1)
+#
+# bootstrapping: If equal to true the bootstrapping strategy is performed 
+# to assess the effect of the sample size
+# 
+# nsim: number of iterations used in the bootsrapping strategy (default is 1000)
 #
 MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
   # print info
@@ -74,7 +81,7 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
       res$success_percentage = NA
       res$success_percentage[res$fdr<fdr_th] = apply(bs, 1, function(x,n=nsim) sum(x<0.05)*100/n)
     } else {
-      cat("\n\n No \n")
+      cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
     }
   } 
   
