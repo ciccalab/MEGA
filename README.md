@@ -30,7 +30,7 @@ as compared to another group of samples.
 3. How to use it
 ==================
 From R shell:
-> source(".MEGA.R")
+source(".MEGA.R")
 load("./example_dataset/MEGA.example.imput.Rdata")
 load("./example_dataset/KEGG.186.gene.sets.Rdata")
 r = MEGA(A,B,gene.sets.kegg)
