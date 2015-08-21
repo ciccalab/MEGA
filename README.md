@@ -70,5 +70,5 @@ Results:
 Significant Gene sets before FDR: 26 
 Significant Gene sets after FDR: 4 
 
-5. Show the 4 significant pathways <br />
+6. Show the 4 significant pathways <br />
 head(r,4) <br />
