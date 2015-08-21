@@ -52,13 +52,13 @@ r = MEGA(A,B,gene.sets.kegg) <br />
 
 5. A summary with the imput parameters used will be showed befor MEGA start.
 
-+----------------------------------------+
- Input parameters:
- FDR threshold: 0.1 
- Number of Gene Sets: 186 
- Bootstrapping: YES
- Number of iterations: 1000 
-+----------------------------------------+
++----------------------------------------+<br />
+ Input parameters:<br />
+ FDR threshold: 0.1 <br />
+ Number of Gene Sets: 186 <br />
+ Bootstrapping: YES<br />
+ Number of iterations: 1000 <br />
++----------------------------------------+<br />
 
 Step 1: Enrichement Gene Set Enrichement Anlysis
 |===============================================| 100%
@@ -72,11 +72,3 @@ Significant Gene sets after FDR: 4
 
 5. Show the 4 significant pathways <br />
 head(r,4) <br />
-
-+-----------------------------------------------------------------------------------------------------------+
-gene.set      									p.value      fdr 						success_percentage
-KEGG\_CYTOKINE\_CYTOKINE\_RECEPTOR\_INTERACTION		4.903350e-06 0.0009120231               95.2
-KEGG\_BIOSYNTHESIS\_OF\_UNSATURATED\_FATTY\_ACIDS	1.802473e-04 0.0111753301               72.8
-KEGG\_TOLL\_LIKE_RECEPTOR\_SIGNALING\_PATHWAY		1.323134e-04 0.0111753301               79.2
-KEGG\_CYTOSOLIC\_DNA\_SENSING\_PATHWAY				1.945476e-03 0.0904646149               59.6
-+-----------------------------------------------------------------------------------------------------------+
