@@ -29,6 +29,24 @@ as compared to another group of samples B.
 
 3. How to use it
 ==================
+From Broswer
+The easiest way to run MEGA is to install **Shiny** package (and the required dependencies) in R, and use the function `runGithub()`. See the example below,
+```
+install.packages("shiny")
+install.packages("shinyjs")
+install.packages("shinythemes")
+install.packages("DT")
+
+library(shiny)
+library(shinyjs)
+library(plotly)
+library(shinythemes)
+library(DT)
+
+runGitHub("MEGA","Your_username")
+```
+
+
 From R shell
 
 inunput:
