@@ -11,12 +11,12 @@ appCSS <- ".mandatory_star { color: red; }"
 shinyUI(
   fluidPage(#theme = shinytheme("cerulean"),
             # theme='cloneR.css',
-    navbarPage("MEGA",
+    navbarPage("MEGA-RVs",
 
-             tabPanel("MEGA",
+             tabPanel("MEGA-RVs",
 
-                      titlePanel("MEGA"),
-                      h4("Mutational Enrichment Gene set Analysis"),
+                      titlePanel("MEGA-RVs"),
+                      h4("Mutational Enrichment Gene set Analysis of Rare Variants"),
                       shinyjs::useShinyjs(),
                       shinyjs::inlineCSS(appCSS),
 
@@ -29,7 +29,9 @@ shinyUI(
                                  selectInput("bootstrapping", 'Bootstrapping', choices=c("True","False"), selected="True"),
                                  numericInput("nsim", "Number of simulations", value=1000),
                                  p("Mandatory fields are marked with *"),
-                                 actionButton("submit", "Run MEGA", class = "btn-primary")
+                                 actionButton("submit", "Run MEGA-RVs", class = "btn-primary"),
+                                 downloadButton('downloadData', 'Download Results')
+
                                ),
 
                         # MAIN PANEL
@@ -43,7 +45,7 @@ shinyUI(
                       titlePanel("Help page"),
                       withTags({
                         div(class="header", checked=NA,
-                            p("MEGA was developed to identify predefined gene
+                            p("MEGA-RVs was developed to identify predefined gene
                               sets (e.g. genes involved in the same pathway, or predisposing
                               to specific diseases) that show a significantly higher number
                               of mutations in a group of samples as compared to another

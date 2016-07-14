@@ -26,6 +26,7 @@ make_pathway_list = function(pathMsigDbFile) {
 }
 
 shinyServer(function(input, output) {
+      current = reactiveValues(res =NULL)
 
 
       RUN = eventReactive(input$submit, {
@@ -60,9 +61,17 @@ shinyServer(function(input, output) {
       # TAB results
        output$mega_results   = DT::renderDataTable({
          results = RUN()
-
-         DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 100))
-
+         current$res = results
+         DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 50))
        })
 
+       output$downloadData <- downloadHandler(
+
+         filename = function() {
+           "MEGA-RVs_results.tsv"
+         },
+         content = function(con) {
+           write.table(current$res,con,col.names = T, row.names = F, quote = F, sep="\t")
+         }
+       )
   })

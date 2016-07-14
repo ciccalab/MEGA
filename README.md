@@ -1,4 +1,4 @@
-Welcome to MEGA Repository
+Welcome to MEGA-RVs Repository
 -------------------------------
 
 1. GNU General Public License
@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 2. Repository Description
 ==========================
 
-MEGA (Mutation Enrichment Gene set Analysis ) was developed to 
+MEGA-RVs (Mutation Enrichment Gene set Analysis of Rare Variants) was developed to 
 identify predefined gene sets (e.g. genes involved in the same
 pathway, or predisposing to specific diseases) that show a
 significantly higher number of mutations in a group of samples A
@@ -30,7 +30,8 @@ as compared to another group of samples B.
 3. How to use it
 ==================
 From Broswer
-The easiest way to run MEGA is to install **Shiny** package (and the required dependencies) in R, and use the function `runGithub()`. See the example below,
+
+The easiest way to run MEGA-RVs is to install **Shiny** package (and the required dependencies) in R, and use the function `runGithub()`. See the example below,
 ```
 install.packages("shiny")
 install.packages("shinyjs")
@@ -56,7 +57,7 @@ the mutation fall.
 
 Example:
 
-1. Load the MEGA functions in the Global Enviroment <br />
+1. Load the MEGA-RVs functions in the Global Enviroment <br />
 source("./MEGA.R") <br />
 
 2. Load the predifined list of gene sets. As example, here we use KEGG gene sets <br />
@@ -65,10 +66,10 @@ load("./example_dataset/MEGA.example.imput.Rdata") <br />
 3. Load the two sets of individuals A and B.
 load("./example_dataset/KEGG.186.gene.sets.Rdata") <br />
 
-4. Run MEGA and identify which gene sets are significanly mutated in the group of samples A as compared to B <br />
+4. Run MEGA-RVs and identify which gene sets are significanly mutated in the group of samples A as compared to B <br />
 r = MEGA(A,B,gene.sets.kegg) <br />
 
-5. A summary with the imput parameters used will be showed befor MEGA start.
+5. A summary with the imput parameters used will be showed befor MEGA-RVs start.
 
 +----------------------------------------+<br />
  Input parameters:<br />
