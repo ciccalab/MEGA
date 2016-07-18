@@ -24,14 +24,15 @@ shinyUI(
                         sidebarPanel(
                                  fileInput('cohort_A', 'Cohort A (tab-separated file)*', accept = c('text/tab-separated-values', '.tsv' )),
                                  fileInput('cohort_B', 'Cohort B (tab-separated file)*', accept = c('text/tab-separated-values', '.tsv' )),
-                                 fileInput('gene_set', 'Gene Set*'),
+                                 selectInput("gs_dataset", "Select MsigDB GeneSet:",choices = list("KEGG"=1,"GO biological process"=2,"GO cellular component"=3,"GO molecular function"=4,"Reactome"=5,"BioCarta"=6,"Positional gene sets"=7,"Hallmark gene sets"=8,"Transcription factor targets"=9,"Cancer gene neighborhoods"=10,"Cancer modules"=11,"Oncogenic signatures"=12),selected = 1),
+                                 checkboxInput("customGS", label = tags$b("Use Custom Gene Set"), value = FALSE),
+                                 conditionalPanel(condition = "input.customGS == true",fileInput('gene_set', label = NULL)),
                                  sliderInput("fdr",    'False Discovery Rate', min=0, max=1, value=0.1),
                                  selectInput("bootstrapping", 'Bootstrapping', choices=c("True","False"), selected="True"),
                                  numericInput("nsim", "Number of simulations", value=1000),
                                  p("Mandatory fields are marked with *"),
                                  actionButton("submit", "Run MEGA-RVs", class = "btn-primary"),
                                  downloadButton('downloadData', 'Download Results')
-
                                ),
 
                         # MAIN PANEL

@@ -29,10 +29,10 @@ shinyServer(function(input, output) {
 
 
       RUN = eventReactive(input$submit, {
-
               A             = read.delim(input$cohort_A$datapath, header=T, stringsAsFactors = F)
               B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
-              geneset       = make_pathway_list(input$gene_set$datapath)
+              gene.set.path = ifelse(!input$customGS,get.gene.set(as.numeric(input$gs_dataset)),input$gene_set$datapath)
+              geneset       = make_pathway_list(gene.set.path)
               fdr_th        = input$fdr
               bootstrapping = input$bootstrapping=="True"
               nsim          = input$nsim
@@ -50,6 +50,7 @@ shinyServer(function(input, output) {
          current$res = results
          DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 50))
        })
+       
 
        output$downloadData <- downloadHandler(
 
