@@ -31,23 +31,11 @@ shinyServer(function(input, output) {
 
       RUN = eventReactive(input$submit, {
 
-              A             = read.delim(input$cohort_A$datapath, header=T)
-              rn = A[,1]
-              cn = colnames(A)
-              A = as.matrix(A[,-1]); rownames(A) = rn; colnames(A) = cn[2:length(cn)]
-              print(A)
-
-              B             = read.delim(input$cohort_B$datapath, header=T)
-              rn = B[,1]
-              cn = colnames(B)
-              B = as.matrix(B[,-1]); rownames(B) = rn; colnames(B) =  cn[2:length(cn)]
-              print(B)
+              A             = read.delim(input$cohort_A$datapath, header=T, stringsAsFactors = F)
+              B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
               geneset       = make_pathway_list(input$gene_set$datapath)
-              print(geneset)
               fdr_th        = input$fdr
-
               bootstrapping = input$bootstrapping=="True"
-
               nsim          = input$nsim
 
               if(!is.null(A) & !is.null(B) & !is.null(geneset) ){
@@ -55,7 +43,6 @@ shinyServer(function(input, output) {
               }
 
       })
-
 
 
       # TAB results
