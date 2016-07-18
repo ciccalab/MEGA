@@ -137,11 +137,11 @@ MEGA.bootstrapping = function(A,B,gene.sets,nsim) {
   B = B[,-1]
   
   inc <- 1/nsim
-  withProgress(message = 'Bootstrapping', value = 0, {
-    out = sapply(1:nsim, function(x,a=A,b=B,gs=gene.sets,ga=gA,gb=gB,z=inc) {
+  withProgress(message = 'Starting the Bootstrapping process...', value = 0, {
+    out = sapply(1:nsim, function(x,a=A,b=B,gs=gene.sets,ga=gA,gb=gB,z=inc,tot=nsim) {
                   o = NULL
                   N = min(ncol(a),ncol(b))
-                  incProgress(z)
+                  incProgress(z,message = paste("random sampling",x,"of",nsim))
                   if (ncol(a)<ncol(b)) {
                     ix = sample(1:ncol(b),N)
                     o = sapply(gs, function(xx,aa=cbind(ga,a),bb=cbind(gb,b[,ix])) MEGA.core(aa,bb,xx))
