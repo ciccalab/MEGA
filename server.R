@@ -12,7 +12,6 @@ make_pathway_list = function(pathMsigDbFile) {
   c = 1
   pathway.list <- vector(mode="list",length=0)
   while (length(oneLine <- readLines(con, n = 1, warn = FALSE)) > 0) {
-    print(c)
     myVector <- do.call("rbind",strsplit(oneLine, "\t"))
     t = vector(mode="list",length=1)
     t[[1]] = myVector[3:length(myVector)]
