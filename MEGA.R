@@ -56,7 +56,7 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
   }
   cat("========================================\n")
   
-  cat("\nStep 1: Enrichement Gene Set Enrichement Anlysis\n")
+  cat("\nStep 1: Enrichement Gene Set Enrichement Analysis\n")
   
   # Execute the enrichement
   # ------------------------
