@@ -1,4 +1,4 @@
-source("MEGA.R")
+source("./functions/shiny_libs.R")
 library(shiny)
 library(DT)
 
