@@ -55,17 +55,14 @@ shinyUI(
                       withTags({
                         div(class="body", checked=NA,
                             h4("Arguments"),
-                            p(strong("A and B")," = Boolean matrices of mutations. Coloums are samples, while rows are
-                              mutations. The first coloumn must always contain the name of thegene in which
-                              the mutation fall."),
+                            p(strong("A and B")," are data frame objects contaning the mutations counts. Coloums are samples, while rows are mutations. The first coloumn must always contain the name of the gene in which the mutation fall."),
                             p("Example:"),
-                            p("Symbol\tSample1\tSample2\tSample3"),
-                            p("GeneA\tTRUE\tFALSE\tFALSE"),
-                            p("GeneA\tTRUE\tTRUE\tFALSE"),
-                            p("GeneB\tTRUE\tFALSE\tTRUE"),
-                            p("GeneC\tFALSE\tFALSE\tFALSE"),
-                            p("GeneC\tFALSE\tTRUE\tFALSE"),
-                            p("GeneD\tTRUE\tTRUE\tFALSE"),
+                            p("Symbol\tS1\tS2\tS3"),
+                            p("GeneA\t1\t0\t0"),
+                            p("GeneB\t1\t0\t1"),
+                            p("GeneC\t0\t0\t1"),
+                            p("GeneD\t0\t1\t0"),
+                            p("GeneE\t1\t1\t1"),
                             p(strong("gene.sets")," = List of gene sets. Each element of the list is set of genes and
                               the name of each element of the list must be the name of the gene set."),
                             p("Example:"),
