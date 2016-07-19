@@ -47,8 +47,8 @@ runGitHub("MEGA","ciccalab")
 ```
 
 
-4. How to run it in from R shell as standalon app
-=================================================
+4. How to run it in from R shell as stand-alone app
+===================================================
 
 input:
 A and B: Data frame object contaning the mutations counts. Coloums are samples,
