@@ -91,5 +91,5 @@ Significant Gene sets before FDR: 26
 Significant Gene sets after FDR: 4
 
 6. Show the 4 significant pathways
-head(r,4)
+> head(r,4)
 ```
