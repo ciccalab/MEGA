@@ -66,7 +66,8 @@ Example:
 3. Load the two sets of individuals A and B.
 > load("./example_dataset/KEGG.186.gene.sets.Rdata")
 
-4. Run MEGA-RVs and identify which gene sets are significanly mutated in the group of samples A as compared to B
+4. Run MEGA-RVs and identify which gene sets are significanly mutated in the
+group of samples A as compared to B
 > r = MEGA(A,B,gene.sets.kegg)
 
 5. A summary with the imput parameters used will be showed befor MEGA-RVs start.
