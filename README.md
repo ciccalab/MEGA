@@ -57,38 +57,38 @@ gene in which the mutation fall.
 
 Example:
 ```
-1. Load the MEGA-RVs functions in the Global Enviroment <br />
-source("./MEGA.R") <br />
+1. Load the MEGA-RVs functions in the Global Enviroment
+> source("./MEGA.R")
 
-2. Load the predifined list of gene sets. As example, here we use KEGG gene sets <br />
-load("./example_dataset/MEGA.example.imput.Rdata") <br />
+2. Load the predifined list of gene sets. As example, here we use KEGG gene sets
+> load("./example_dataset/MEGA.example.imput.Rdata")
 
 3. Load the two sets of individuals A and B.
-load("./example_dataset/KEGG.186.gene.sets.Rdata") <br />
+> load("./example_dataset/KEGG.186.gene.sets.Rdata")
 
-4. Run MEGA-RVs and identify which gene sets are significanly mutated in the group of samples A as compared to B <br />
-r = MEGA(A,B,gene.sets.kegg) <br />
+4. Run MEGA-RVs and identify which gene sets are significanly mutated in the group of samples A as compared to B
+> r = MEGA(A,B,gene.sets.kegg)
 
 5. A summary with the imput parameters used will be showed befor MEGA-RVs start.
 
-+----------------------------------------+<br />
- Input parameters:<br />
- FDR threshold: 0.1 <br />
- Number of Gene Sets: 186 <br />
- Bootstrapping: YES<br />
- Number of iterations: 1000 <br />
-+----------------------------------------+<br />
++----------------------------------------+
+ Input parameters:
+ FDR threshold: 0.1
+ Number of Gene Sets: 186
+ Bootstrapping: YES
+ Number of iterations: 1000
++----------------------------------------+
 
-Step 1: Enrichement Gene Set Enrichement Anlysis<br />
+Step 1: Enrichement Gene Set Enrichement Anlysis
 |===============================================| 100%
 
-Step 2: Bootstrapping for 4 significant gene sets<br />
+Step 2: Bootstrapping for 4 significant gene sets
 |===============================================| 100%
 
-Results:<br />
-Significant Gene sets before FDR: 26<br />
-Significant Gene sets after FDR: 4<br />
+Results:
+Significant Gene sets before FDR: 26
+Significant Gene sets after FDR: 4
 
-6. Show the 4 significant pathways<br />
-head(r,4) <br />
+6. Show the 4 significant pathways
+head(r,4)
 ```
