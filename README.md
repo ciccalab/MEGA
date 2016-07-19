@@ -27,9 +27,8 @@ pathway, or predisposing to specific diseases) that show a
 significantly higher number of mutations in a group of samples A
 as compared to another group of samples B.
 
-3. How to use it
-==================
-From Broswer
+3. How to run it in your browser as R shiny app
+===============================================
 
 The easiest way to run MEGA-RVs is to install **Shiny** package (and the required dependencies) in R, and use the function `runGithub()`. See the example below,
 ```
@@ -48,15 +47,16 @@ runGitHub("MEGA","ciccalab")
 ```
 
 
-From R shell
+3. How to run it in from R shell as standalon app
+=================================================
 
-inunput:
-A and B: Boolean matrices of mutations. Coloums are samples, while rows are
-mutations. The first coloumn must always contain the name of the gene in which
-the mutation fall.
+input:
+A and B: Data frame object contaning the mutations counts. Coloums are samples,
+while rows are mutations. The first coloumn must always contain the name of the
+gene in which the mutation fall.
 
 Example:
-
+```
 1. Load the MEGA-RVs functions in the Global Enviroment <br />
 source("./MEGA.R") <br />
 
@@ -79,15 +79,16 @@ r = MEGA(A,B,gene.sets.kegg) <br />
  Number of iterations: 1000 <br />
 +----------------------------------------+<br />
 
-Step 1: Enrichement Gene Set Enrichement Anlysis
+Step 1: Enrichement Gene Set Enrichement Anlysis<br />
 |===============================================| 100%
 
-Step 2: Bootstrapping for 4 significant gene sets
+Step 2: Bootstrapping for 4 significant gene sets<br />
 |===============================================| 100%
 
-Results:
-Significant Gene sets before FDR: 26 
-Significant Gene sets after FDR: 4 
+Results:<br />
+Significant Gene sets before FDR: 26<br />
+Significant Gene sets after FDR: 4<br />
 
-6. Show the 4 significant pathways <br />
+6. Show the 4 significant pathways<br />
 head(r,4) <br />
+```
