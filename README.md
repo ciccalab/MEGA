@@ -47,7 +47,7 @@ runGitHub("MEGA","ciccalab")
 ```
 
 
-3. How to run it in from R shell as standalon app
+4. How to run it in from R shell as standalon app
 =================================================
 
 input:
