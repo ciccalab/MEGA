@@ -44,7 +44,7 @@ library(plotly)
 library(shinythemes)
 library(DT)
 
-runGitHub("MEGA","Your_username")
+runGitHub("MEGA","ciccalab")
 ```
 
 
