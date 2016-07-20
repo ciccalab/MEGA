@@ -1,6 +1,7 @@
-library(shiny)
-library(shinyjs)
-library(shinythemes)
+require(shiny)
+require(shinyjs)
+require(shinythemes)
+require(DT)
 
 panel_width = 3
 result_with = 10

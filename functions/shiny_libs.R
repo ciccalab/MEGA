@@ -1,3 +1,8 @@
+require(shiny)
+require(shinyjs)
+require(shinythemes)
+require(DT)
+
 # -----------------------------
 # FUNCTION: MEGA
 # -----------------------------

@@ -1,9 +1,4 @@
 source("./functions/shiny_libs.R")
-require(shiny)
-require(shinyjs)
-require(plotly)
-require(shinythemes)
-require(DT)
 
 options(shiny.maxRequestSize = 30*1024^2)
 options(scipen=3)
