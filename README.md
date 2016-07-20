@@ -43,7 +43,7 @@ library(plotly)
 library(shinythemes)
 library(DT)
 
-runGitHub("MEGA","ciccalab")
+shiny::runGitHub('ciccalab/MEGA')
 ```
 
 
