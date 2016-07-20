@@ -9,8 +9,7 @@ appCSS <- ".mandatory_star { color: red; }"
 
 # Define UI for application that draws a histogram
 shinyUI(
-  fluidPage(#theme = shinytheme("cerulean"),
-            # theme='cloneR.css',
+  fluidPage(theme = shinytheme("united"),
     navbarPage("MEGA-RVs",
 
              tabPanel("MEGA-RVs",
