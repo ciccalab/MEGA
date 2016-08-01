@@ -3,25 +3,6 @@ source("./functions/shiny_libs.R")
 options(shiny.maxRequestSize = 30*1024^2)
 options(scipen=3)
 
-make_pathway_list = function(pathMsigDbFile) {
-  inputFile <- pathMsigDbFile
-  con  <- file(inputFile, open = "r")
-
-  c = 1
-  pathway.list <- vector(mode="list",length=0)
-  while (length(oneLine <- readLines(con, n = 1, warn = FALSE)) > 0) {
-    myVector <- do.call("rbind",strsplit(oneLine, "\t"))
-    t = vector(mode="list",length=1)
-    t[[1]] = myVector[3:length(myVector)]
-    names(t) = myVector[1]
-    pathway.list = c(pathway.list,t)
-    c = c+1
-  }
-
-  close(con)
-  return(pathway.list)
-}
-
 shinyServer(function(input, output) {
       current = reactiveValues(res =NULL)
 
