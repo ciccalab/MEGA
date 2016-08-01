@@ -1,8 +1,8 @@
 Welcome to MEGA-RVs Repository
 -------------------------------
 
-1. Notes and How to cite us
-==============================
+1. Notes and How to cite MEGA-RVs
+=================================
 
 MEGA-RVs is an user frendly version of the original method MEGA pubblished by Cereda et al. (Nature Comm. 2016). We re-implemeted it as R shiny application in order to allow its execution also from a web-based environment. Origina stand-alone version is still supported and can be found in this repository (see section 5).
 
