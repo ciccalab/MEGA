@@ -1,6 +1,14 @@
 Welcome to MEGA-RVs Repository
 -------------------------------
 
+0. GNU General Public License
+==============================
+
+MEGA-RVs is an evolution of the original method MEGA pubblished at the following
+address http://www.nature.com/ncomms/2016/160705/ncomms12072/full/ncomms12072.html 
+by Cereda et al. (Nature Comm. 2016)
+
+
 1. GNU General Public License
 ==============================
 
@@ -26,6 +34,7 @@ identify predefined gene sets (e.g. genes involved in the same
 pathway, or predisposing to specific diseases) that show a
 significantly higher number of mutations in a group of samples A
 as compared to another group of samples B.
+
 
 3. How to run it in your browser as R shiny app
 ===============================================
