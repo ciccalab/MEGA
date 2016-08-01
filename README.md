@@ -1,7 +1,7 @@
 Welcome to MEGA-RVs Repository
 -------------------------------
 
-0. GNU General Public License
+0. How to cite us
 ==============================
 
 MEGA-RVs is an evolution of the original method MEGA pubblished at the following
