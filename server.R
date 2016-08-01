@@ -1,5 +1,13 @@
 source("./functions/shiny_libs.R")
 
+shinyInput <- function(FUN, len, id, ...) {
+  inputs <- character(len)
+  for (i in seq_len(len)) {
+    inputs[i] <- as.character(FUN(paste0(id, i), ...))
+  }
+  inputs
+}
+
 options(shiny.maxRequestSize = 30*1024^2)
 options(scipen=3)
 
@@ -24,11 +32,11 @@ shinyServer(function(input, output) {
 
 
       # TAB results
-       output$mega_results   = DT::renderDataTable({
-         results = RUN()
-         current$res = results
-         DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 50))
-       })
+      output$mega_results   = DT::renderDataTable({
+        results = RUN()
+        current$res = results
+        DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 15),selection= 'single',rownames = FALSE)
+      })
        
 
        output$downloadData <- downloadHandler(
