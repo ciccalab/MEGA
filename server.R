@@ -20,7 +20,7 @@ shinyServer(function(input, output) {
               B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
               gene.set.path = ifelse(!input$customGS,get.gene.set(as.numeric(input$gs_dataset)),input$gene_set$datapath)
               geneset       = make_pathway_list(gene.set.path)
-              fdr_th        = input$fdr
+              fdr_th        = 0.1
               bootstrapping = input$bootstrapping=="True"
               nsim          = input$nsim
 
