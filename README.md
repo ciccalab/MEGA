@@ -1,7 +1,7 @@
 Welcome to MEGA-RVs Repository
 -------------------------------
 
-0. How to cite us
+1. How to cite us
 ==============================
 
 MEGA-RVs is an evolution of the original method MEGA pubblished at the following
@@ -9,7 +9,7 @@ address http://www.nature.com/ncomms/2016/160705/ncomms12072/full/ncomms12072.ht
 by Cereda et al. (Nature Comm. 2016)
 
 
-1. GNU General Public License
+2. GNU General Public License
 ==============================
 
 This repo contains free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-2. Repository Description
+3. Repository Description
 ==========================
 
 MEGA-RVs (Mutation Enrichment Gene set Analysis of Rare Variants) was developed to 
@@ -36,7 +36,7 @@ significantly higher number of mutations in a group of samples A
 as compared to another group of samples B.
 
 
-3. How to run it in your browser as R shiny app
+4. How to run it in your browser as R shiny app
 ===============================================
 
 The easiest way to run MEGA-RVs is to install **Shiny** package (and the required dependencies) in R, and use the function `runGithub()`. See the example below,
@@ -56,7 +56,7 @@ shiny::runGitHub('ciccalab/MEGA')
 ```
 
 
-4. How to run it in from R shell as stand-alone app
+5. How to run it in from R shell as stand-alone app
 ===================================================
 
 input:
