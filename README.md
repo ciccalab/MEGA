@@ -48,7 +48,6 @@ install.packages("DT")
 
 library(shiny)
 library(shinyjs)
-library(plotly)
 library(shinythemes)
 library(DT)
 
