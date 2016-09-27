@@ -62,10 +62,11 @@ Example:
 > source("./MEGA.R")
 
 2. Load the predifined list of gene sets. As example, here we use KEGG gene sets
-> load("./example_dataset/MEGA.example.input.Rdata")
+> load("./example_dataset/KEGG.186.gene.sets.Rdata")
 
 3. Load the two sets of individuals A and B.
-> load("./example_dataset/KEGG.186.gene.sets.Rdata")
+> A <- read.delim("./example_dataset/A.tsv.gz",stringsAsFactors = F)
+> B <- read.delim("./example_dataset/B.tsv.gz",stringsAsFactors = F)
 
 4. Run MEGA-V and identify which gene sets are significantly mutated in the
 group of samples A as compared to B
