@@ -25,7 +25,7 @@ shinyUI(
                                  fileInput('cohort_A', 'Cohort A (tab-separated file)*', accept = c('text/tab-separated-values', c('.tsv','.gz') )),
                                  fileInput('cohort_B', 'Cohort B (tab-separated file)*', accept = c('text/tab-separated-values', c('.tsv','.gz') )),
                                  selectInput("gs_dataset", "Select MsigDB GeneSet:",choices = list("KEGG"=1,"GO biological process"=2,"GO cellular component"=3,"GO molecular function"=4,"Reactome"=5,"BioCarta"=6,"Positional gene sets"=7,"Hallmark gene sets"=8,"Transcription factor targets"=9,"Cancer gene neighborhoods"=10,"Cancer modules"=11,"Oncogenic signatures"=12,"Disease associated"=13),selected = 1),
-                                 selectInput("stat.test", 'Statistical Test', choices=c("GLM (Negative Binomial)"=1,"Wilcoxon"=2), selected="GLM"),
+                                 selectInput("stat.test", 'Statistical Test', choices=c("GLM (Negative Binomial)"=1,"Wilcoxon"=2), selected="Wilcoxon"),
                                  checkboxInput("customGS", label = tags$b("Use Custom Gene Set"), value = FALSE),
                                  conditionalPanel(condition = "input.customGS == true",fileInput('gene_set', label = NULL,accept = c('Gene Matrix Transposed','.gmt'))),
                                  #sliderInput("fdr",    'False Discovery Rate', min=0, max=1, value=0.1),
