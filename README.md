@@ -39,7 +39,8 @@ install.packages("shiny")
 install.packages("shinyjs")
 install.packages("shinythemes")
 install.packages("DT")
-install.packages("parallel")
+install.packages("parallel") # for Monte Carlo
+install.packages("MASS") # for GLM test with Negative Binomial
 
 library(shiny)
 library(shinyjs)

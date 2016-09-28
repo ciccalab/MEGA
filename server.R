@@ -20,12 +20,13 @@ shinyServer(function(input, output) {
               B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
               gene.set.path = ifelse(!input$customGS,get.gene.set(as.numeric(input$gs_dataset)),input$gene_set$datapath)
               geneset       = make_pathway_list(gene.set.path)
+              s.test        = input$stat.test
               fdr_th        = 0.1
               bootstrapping = input$bootstrapping=="True"
               nsim          = input$nsim
 
               if(!is.null(A) & !is.null(B) & !is.null(geneset) ){
-                MEGA(A, B, geneset, fdr_th, bootstrapping, nsim)
+                MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test)
               }
 
       })
