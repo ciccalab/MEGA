@@ -1,3 +1,4 @@
+require(MASS)
 # -----------------------------
 # FUNCTION: MEGA
 # -----------------------------
@@ -39,7 +40,7 @@
 # 
 # nsim: number of iterations used in the bootsrapping strategy (default is 1000)
 #
-MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
+MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000,test="W") {
   # print info
   # -----------
   print.logo()
@@ -61,25 +62,29 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
   # Execute the enrichement
   # ------------------------
   pb = txtProgressBar(min = 0, max = length(gene.sets), initial = 0,style=3)
-  p = sapply(1:length(gene.sets), function(x,z=pb,a=A,b=B,gs=gene.sets) {
+  p = sapply(1:length(gene.sets), function(x,z=pb,a=A,b=B,gs=gene.sets,t=test) {
     setTxtProgressBar(z,x)
-    r = MEGA.core(A,B,gs[[x]])
+    r = MEGA.core(A,B,gs[[x]],t)
     names(r) = names(gs)[x]
     return(r)
   })
   
   res = data.frame("gene.set"=names(p),p.value=p,fdr= p.adjust(p,method = "fdr"),stringsAsFactors = F)
-  rownames(res) = NULL
   res = res[order(res$fdr),]
+  rownames(res) = NULL
   
   # Execute Bootstrapping if required
   # ----------------------------------
   if (bootstrapping) {
     if (sum(res$fdr<fdr_th)) {
       cat("\n\nStep 2: Bootstrapping for",sum(res$fdr<fdr_th),"significant gene sets\n")
-      bs = MEGA.bootstrapping(A,B,gene.sets[res$gene.set[res$fdr<fdr_th]],nsim)
+      bs = MEGA.bootstrapping(A,B,gene.sets[res$gene.set[res$fdr<fdr_th]],nsim,test)
       res$success_percentage = NA
-      res$success_percentage[res$fdr<fdr_th] = apply(bs, 1, function(x,n=nsim) sum(x<0.05)*100/n)
+      if (!is.null(dim(bs))) {
+        res$success_percentage[res$fdr<fdr_th] = apply(bs, 1, function(x,n=nsim) sum(x<0.05)*100/n)
+      } else {
+        res$success_percentage[res$fdr<fdr_th] = sum(bs<0.05)*100/nsim
+      }
     } else {
       cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
     }
@@ -121,7 +126,7 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000) {
 # X --> Gene set: a list of genes
 # Example: X = c("ABCA10","ZNF572","ASPM","CSMD2")
 # 
-MEGA.core = function(A,B,X) {
+MEGA.core = function(A,B,X,test="W") {
   ix = A[,1] %in% X
   if (sum(ix) > 0) {
     A = A[ix,2:ncol(A)]
@@ -138,7 +143,12 @@ MEGA.core = function(A,B,X) {
     Db = matrix(data=0, nrow = 1, ncol = ncol(B))
   }
   
-  p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
+  if (test == "W")
+  {
+    p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
+  } else {
+    p = anova(glm.nb(c(Da,Db) ~ c(rep("t",length(Da)),rep("c",length(Db)))))$`Pr(>Chi)`[2]
+  }
   return(p)
 }
 
@@ -148,23 +158,23 @@ MEGA.core = function(A,B,X) {
 # Description: At each iteration, the larger cohort is randomly downsampled to reach the 
 # sample size of the smaller cohort. The procedure is repeted for nsim time times and 
 # MEGA is executed.
-MEGA.bootstrapping = function(A,B,gene.sets,nsim) {
+MEGA.bootstrapping = function(A,B,gene.sets,nsim,test="W") {
   gA = A[,1]
   gB = B[,1]
   A = A[,-1]
   B = B[,-1]
    
   pb = txtProgressBar(min = 0, max = nsim, initial = 0,style=3)
-  out = sapply(1:nsim, function(x,a=A,b=B,gs=gene.sets,ga=gA,gb=gB,z=pb) {
+  out = sapply(1:nsim, function(x,a=A,b=B,gs=gene.sets,ga=gA,gb=gB,z=pb,t=test) {
                 o = NULL
                 N = min(ncol(a),ncol(b))
                 setTxtProgressBar(z,x)
                 if (ncol(a)<ncol(b)) {
                   ix = sample(1:ncol(b),N)
-                  o = sapply(gs, function(xx,aa=cbind(ga,a),bb=cbind(gb,b[,ix])) MEGA.core(aa,bb,xx))
+                  o = sapply(gs, function(xx,aa=cbind(ga,a),bb=cbind(gb,b[,ix]),tt=t) MEGA.core(aa,bb,xx,tt))
                 } else {
                   ix = sample(1:ncol(a),N)
-                  o = sapply(gs, function(xx,aa=cbind(ga,a[,ix]),bb=cbind(gb,b)) MEGA.core(aa,bb,xx))
+                  o = sapply(gs, function(xx,aa=cbind(ga,a[,ix]),bb=cbind(gb,b),tt=t) MEGA.core(aa,bb,xx,tt))
                 }
                 return(o)
               }
