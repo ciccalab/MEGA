@@ -55,8 +55,8 @@ MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
   if (cores > 1)
     stopCluster(cl)
   
-  res$FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
-  res <- res[order(res$FDR),]
+  #res$FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
+  res <- res[order(res$empirical.pvalue),]
   return(res)
 }
 

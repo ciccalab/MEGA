@@ -41,7 +41,7 @@ require(MASS)
 # 
 # nsim: number of iterations used in the bootsrapping strategy (default is 1000)
 #
-MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W") {
+MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",montecarlo=F,gene.cds.length=NULL,cpus=2) {
   
   # Execute the enrichement
   # ------------------------
@@ -74,6 +74,20 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W") {
       }
     } else {
       cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
+    }
+  }
+  
+  # Execute Monte Carlo if required
+  # ----------------------------------
+  if (montecarlo) {
+    if (sum(res$fdr<fdr_th)) {
+      res.mc = MEGA.MC(A,gene.sets[res$gene.set[res$fdr<fdr_th]],gene.cds.length,cores = cpus,nsim)
+      res$MC.pvalue = NA
+      id1 = match(res$gene.set,res.mc$pathway)
+      id2 <- !is.na(id1)
+      res$MC.pvalue[!is.na(id1)] = res.mc$empirical.pvalue[id2]
+    } else {
+      cat("\n\n Step 2: Monte Carlo can not be performed. No significant gene sets\n")
     }
   }
   

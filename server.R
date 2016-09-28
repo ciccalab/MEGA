@@ -1,4 +1,5 @@
 source("./functions/shiny_libs.R")
+source("./functions/MEGA_MC_libs.R")
 
 shinyInput <- function(FUN, len, id, ...) {
   inputs <- character(len)
@@ -23,10 +24,16 @@ shinyServer(function(input, output) {
               s.test        = input$stat.test
               fdr_th        = 0.1
               bootstrapping = input$bootstrapping=="True"
+              montecarlo    = input$motecarlo=="True"
               nsim          = input$nsim
-
+              genome        = input$genome
+              
               if(!is.null(A) & !is.null(B) & !is.null(geneset) ){
-                MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test)
+                
+                if (montecarlo)
+                  load(paste("./RData/",genome,".gene.cds.length.RData",sep = ""))
+                
+                MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test, montecarlo, gene.cds.length, cpus=2)
               }
 
       })
