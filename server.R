@@ -1,5 +1,4 @@
 source("./functions/shiny_libs.R")
-source("./functions/MEGA_MC_libs.R")
 
 shinyInput <- function(FUN, len, id, ...) {
   inputs <- character(len)
@@ -32,6 +31,7 @@ shinyServer(function(input, output) {
                 
                 if (montecarlo)
                 {
+                  source("./functions/MEGA_MC_libs.R")
                   cpus = detectCores()
                   if (!is.null(cpus))
                   {
