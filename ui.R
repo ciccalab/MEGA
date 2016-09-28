@@ -29,7 +29,7 @@ shinyUI(
                                  checkboxInput("customGS", label = tags$b("Use Custom Gene Set"), value = FALSE),
                                  conditionalPanel(condition = "input.customGS == true",fileInput('gene_set', label = NULL,accept = c('Gene Matrix Transposed','.gmt'))),
                                  #sliderInput("fdr",    'False Discovery Rate', min=0, max=1, value=0.1),
-                                 selectInput("bootstrapping", 'Bootstrapping', choices=c("True","False"), selected="True"),
+                                 selectInput("bootstrapping", 'Bootstrapping', choices=c("True","False"), selected="False"),
                                  numericInput("nsim", "Number of random sampling", value=1000),
                                  p("Mandatory fields are marked with *"),
                                  actionButton("submit", "Run MEGA-RVs", class = "btn-primary"),

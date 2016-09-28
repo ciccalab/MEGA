@@ -136,7 +136,9 @@ MEGA.core = function(A,B,X,test="W") {
     {
       p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
     } else {
+      options(warn=-1)
       p = anova(glm.nb(c(Da,Db) ~ c(rep("t",length(Da)),rep("c",length(Db)))))$`Pr(>Chi)`[2]
+      options(warn=0)
     }
   }
   
@@ -176,5 +178,5 @@ MEGA.bootstrapping = function(A,B,gene.sets,nsim,test="W") {
 }
 
 get.gene.set = function(ix) {
-  c("./mSigDB_gene_sets/c2.cp.kegg.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.bp.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.cc.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.mf.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.reactome.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.biocarta.v5.1.symbols.gmt","./mSigDB_gene_sets/c1.positional.v5.1.symbols.gmt","./mSigDB_gene_sets/h.all.v5.1.symbols.gmt","./mSigDB_gene_sets/c3.tft.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cgn.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cm.v5.1.symbols.gmt","./mSigDB_gene_sets/c6.all.v5.1.symbols.gmt")[ix]
+  c("./mSigDB_gene_sets/c2.cp.kegg.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.bp.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.cc.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.mf.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.reactome.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.biocarta.v5.1.symbols.gmt","./mSigDB_gene_sets/c1.positional.v5.1.symbols.gmt","./mSigDB_gene_sets/h.all.v5.1.symbols.gmt","./mSigDB_gene_sets/c3.tft.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cgn.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cm.v5.1.symbols.gmt","./mSigDB_gene_sets/c6.all.v5.1.symbols.gmt","./mSigDB_gene_sets/ncomm.cereda.gwas.symbols.gmt")[ix]
 }
