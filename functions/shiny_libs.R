@@ -46,10 +46,10 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
   # Execute the enrichement
   # ------------------------
   
-  withProgress(message = 'Mutation Gene Set Enrichement Anlysis', value = 0, {
-    inc <- 1/(length(gene.sets)+1)
+  withProgress(message = 'Running MEGA', value = 0, {
+    #inc <- 1/(length(gene.sets)+1)
     p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test) {
-      incProgress(z, detail = paste("Processing", names(gs)[x]))
+      incProgress(1/(length(gs)+1), detail = paste(x,"out of", length(gs)))
       r = MEGA.core(A,B,gs[[x]],t)
       names(r) = names(gs)[x]
       return(r)

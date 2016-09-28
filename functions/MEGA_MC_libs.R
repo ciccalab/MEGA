@@ -36,7 +36,7 @@ MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
   {
   for (i in 1:length(gene.sets))
   {
-    incProgress(i/length(gene.sets), detail = paste("\nProcessing", i, "out of",length(gene.sets)))
+    incProgress(1/(length(gene.sets)+1), detail = paste(i, "out of",length(gene.sets)))
     
     X <- gene.sets[[i]]
     Da <- sum(MEGA.MC.core(A,X))
