@@ -30,9 +30,13 @@ MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
   }
   
   res <- NULL
+  
+  withProgress(
+  message = 'Monte Carlo Simulations', value = 0,
+  {
   for (i in 1:length(gene.sets))
   {
-    print(i)
+    incProgress(i/length(gene.sets), detail = paste("\nProcessing", i, "out of",length(gene.sets)))
     
     X <- gene.sets[[i]]
     Da <- sum(MEGA.MC.core(A,X))
@@ -51,12 +55,15 @@ MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
     }
     #print(res)
   }
+  setProgress(1)
   
   if (cores > 1)
     stopCluster(cl)
   
   #res$FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
   res <- res[order(res$empirical.pvalue),]
+  })
+  
   return(res)
 }
 
