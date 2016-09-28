@@ -29,7 +29,7 @@ shinyUI(
                                  checkboxInput("customGS", label = tags$b("Use Custom Gene Set"), value = FALSE),
                                  conditionalPanel(condition = "input.customGS == true",fileInput('gene_set', label = NULL,accept = c('Gene Matrix Transposed','.gmt'))),
                                  selectInput("motecarlo", 'Monte Carlo Simulations', choices=c("True","False"), selected="False"),
-                                 radioButtons("genome","Genome for Monte Carlo Simulation",choices=c("HG19","HG38"),selected="HG19"),
+                                 radioButtons("genome","Genome for Monte Carlo Simulation",choices=c("HG19","HG38"),selected="HG19",inline = TRUE),
                                  selectInput("bootstrapping", 'Bootstrapping', choices=c("True","False"), selected="False"),
                                  numericInput("nsim", "Number of random sampling (Monte Carlo and/or Bootstrapping)", value=1000),
                                  p("Mandatory fields are marked with *"),
