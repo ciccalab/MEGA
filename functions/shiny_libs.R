@@ -194,3 +194,23 @@ MEGA.bootstrapping = function(A,B,gene.sets,nsim,test="W") {
 get.gene.set = function(ix) {
   c("./mSigDB_gene_sets/c2.cp.kegg.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.bp.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.cc.v5.1.symbols.gmt","./mSigDB_gene_sets/c5.mf.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.reactome.v5.1.symbols.gmt","./mSigDB_gene_sets/c2.cp.biocarta.v5.1.symbols.gmt","./mSigDB_gene_sets/c1.positional.v5.1.symbols.gmt","./mSigDB_gene_sets/h.all.v5.1.symbols.gmt","./mSigDB_gene_sets/c3.tft.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cgn.v5.1.symbols.gmt","./mSigDB_gene_sets/c4.cm.v5.1.symbols.gmt","./mSigDB_gene_sets/c6.all.v5.1.symbols.gmt","./mSigDB_gene_sets/ncomm.cereda.gwas.symbols.gmt")[ix]
 }
+
+make_pathway_list = function(pathMsigDbFile) {		
+  nputFile <- pathMsigDbFile		
+  con  <- file(inputFile, open = "r")		
+  		
+  c = 1		
+  pathway.list <- vector(mode="list",length=0)		
+  while (length(oneLine <- readLines(con, n = 1, warn = FALSE)) > 0)
+  {		
+      myVector <- do.call("rbind",strsplit(oneLine, "\t"))		
+      t = vector(mode="list",length=1)		
+      t[[1]] = myVector[3:length(myVector)]		
+      names(t) = myVector[1]		
+      pathway.list = c(pathway.list,t)		
+      c = c+1		
+  }		
+    		
+  close(con)		
+  return(pathway.list)		
+}
