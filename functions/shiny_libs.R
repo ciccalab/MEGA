@@ -196,7 +196,7 @@ get.gene.set = function(ix) {
 }
 
 make_pathway_list = function(pathMsigDbFile) {		
-  nputFile <- pathMsigDbFile		
+  inputFile <- pathMsigDbFile		
   con  <- file(inputFile, open = "r")		
   		
   c = 1		
