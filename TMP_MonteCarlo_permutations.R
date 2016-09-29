@@ -1,4 +1,3 @@
-
 make_pathway_list = function(pathMsigDbFile) {
   inputFile <- pathMsigDbFile
   con  <- file(inputFile, open = "r")
@@ -18,52 +17,6 @@ make_pathway_list = function(pathMsigDbFile) {
   close(con)
   return(pathway.list)
 }
-
-pl = make_pathway_list("mSigDB_gene_sets/c2.cp.kegg.v5.1.symbols.gmt")
-
-tmp= pl["KEGG_CYTOKINE_CYTOKINE_RECEPTOR_INTERACTION"]
-
-syn = read.table("example_dataset/A.tsv.gz", h=T)
-con = read.table("example_dataset/B.tsv.gz", h=T)
-
-
-gene=syn[,1]
-syn=syn[,2:ncol(syn)]; rownames(syn) = gene
-gene=con[,1]
-con=con[,2:ncol(con)]; rownames(con) = gene
-
-syn = syn[which(rownames(syn)%in%tmp[[1]]),]
-con = con[which(rownames(con)%in%tmp[[1]]),]
-dim(syn)
-dim(con)
-
-a = apply(syn,2,sum)
-b = apply(con,2,sum)
-
-tot=c(a,b)
-p0=wilcox.test(a,b,alternative = "greater",exact = F)$p.value
-
-set.seed(1)
-p = rep(NA, 1000)
-for(i in 1:1000){
- x = sample(tot, length(a), replace=T )
- y = tot[!names(tot)%in%names(x)]
- p[i] = wilcox.test(x,y, alternative = 'g', exact = F)$p.value
-}
-pe = sum(p<p0)/1000
-
-
-p0=ks.test(a,b,alternative = "less",exact = F)$p.value
-
-set.seed(1)
-p = rep(NA, 1000)
-for(i in 1:1000){
-  x = sample(tot, length(a), replace=T )
-  y = tot[!names(tot)%in%names(x)]
-  p[i] = ks.test(x,y, alternative = 'less', exact = F)$p.value
-}
-pe = sum(p<=p0)/1000
-
 
 MEGA.core = function(A,B,X,test="W") {
   ix = A[,1] %in% X
@@ -95,16 +48,35 @@ MEGA.core = function(A,B,X,test="W") {
     }
     pe = sum(p<=p0)/1000
 
+  }else if (test == "K")
+  {
+    p0 = ks.test(Da,Db,alternative = "less",exact = F)$p.value
+    tot=c(Da,Db)
+    set.seed(1)
+    p = rep(NA, 1000)
+    for(i in 1:1000){
+      x = sample(tot, length(Da), replace=T )
+      y = tot[!names(tot)%in%names(x)]
+      p[i] = ks.test(x,y, alternative = 'l', exact = F)$p.value
+    }
+    pe = sum(p<=p0)/1000
+
 
   } else {
   }
   return(c(p0,pe))
 }
 
-res = lapply(pl, MEGA.core, A=syn, B=con, test="W")
+pl = make_pathway_list("mSigDB_gene_sets/c2.cp.kegg.v5.1.symbols.gmt")
+
+
+syn = read.table("example_dataset/A.tsv.gz", h=T)
+con = read.table("example_dataset/B.tsv.gz", h=T)
 
 A=syn
 B=con
+
+# ESEMPIO WILCOXON ============================
 test="W"
 pb = txtProgressBar(min = 0, max = length(pl), initial = 0,style=3)
 p = lapply(1:length(pl), function(x,z=pb,a=A,b=B,gs=pl,t=test) {
@@ -117,3 +89,25 @@ df = do.call(rbind, p)
 colnames(df) = c("PV","PE")
 rownames(df) = names(pl)
 df = as.data.frame(df)
+
+df$FDR=p.adjust(df$PV, "fdr")
+subset(df, PV<0.05 & PE<0.05)
+
+# ESEMPIO kolmogorov ============================
+
+test="K"
+pb = txtProgressBar(min = 0, max = length(pl), initial = 0,style=3)
+p = lapply(1:length(pl), function(x,z=pb,a=A,b=B,gs=pl,t=test) {
+  setTxtProgressBar(z,x)
+  r = MEGA.core(A,B,gs[[x]],t)
+  names(r) = names(gs)[x]
+  return(r)
+})
+dfk = do.call(rbind, p)
+colnames(dfk) = c("PV","PE")
+rownames(dfk) = names(pl)
+dfk = as.data.frame(dfk)
+
+dfk$FDR=p.adjust(dfk$PV, "fdr")
+dfk = dfk[order(dfk[,1]),]
+subset(dfk, PV<0.05 & PE<0.05)
