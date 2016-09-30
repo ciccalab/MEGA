@@ -31,6 +31,7 @@ shinyServer(function(input, output) {
                 
                 if (montecarlo)
                 {
+                  require(parallel)
                   cpus = detectCores()
                   if (!is.null(cpus))
                   {
