@@ -56,8 +56,6 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
     })
     
     res = data.frame("gene.set"=names(p),p.value=p,fdr= p.adjust(p,method = "fdr"),stringsAsFactors = F)
-    rownames(res) = NULL
-    res = res[order(res$fdr),]
     setProgress(1)
   })
   
@@ -80,17 +78,22 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
   # Execute Monte Carlo if required
   # ----------------------------------
   if (montecarlo) {
-    if (sum(res$fdr<fdr_th)) {
-      res.mc = MEGA.MC(A,gene.sets[res$gene.set[res$fdr<fdr_th]],gene.cds.length,cores = cpus,nsim)
-      res$MC.pvalue = NA
-      id1 = match(res$gene.set,res.mc$pathway)
-      id2 <- !is.na(id1)
-      res$MC.pvalue[!is.na(id1)] = res.mc$empirical.pvalue[id2]
-    } else {
-      cat("\n\n Step 2: Monte Carlo can not be performed. No significant gene sets\n")
-    }
+    withProgress(message = 'Monte Carlo Simulations', value = 0, {
+      #inc <- 1/(length(gene.sets)+1)
+      p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test,ns=nsim,ncpu=cpus) {
+        incProgress(1/(length(gs)+1), detail = paste(x,"out of", length(gs)))
+        r = MEGA.core(A,B,gs[[x]],t,T,ncpu,ns)
+        names(r) = names(gs)[x]
+        return(r)
+      })
+      
+      res$MC.pval = p
+      setProgress(1)
+    })
   }
   
+  rownames(res) = NULL
+  res = res[order(res$fdr),]
   return(res)
 }
 
@@ -123,7 +126,7 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
 # X --> Gene set: a list of genes
 # Example: X = c("ABCA10","ZNF572","ASPM","CSMD2")
 # 
-MEGA.core = function(A,B,X,test="W") {
+MEGA.core = function(A,B,X,test=2,montecarlo=F,cores=2,nsim=1000) {
   p = 1
   ix = A[,1] %in% X
   
@@ -144,18 +147,23 @@ MEGA.core = function(A,B,X,test="W") {
     Db = matrix(data=0, nrow = 1, ncol = ncol(B))
   }
   
-  if (sum(Da)>0 | sum(Db) > 0)
-  {
-    if (test == 2)
-    {
-      p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
-    } else {
-      options(warn=-1)
-      p = anova(glm.nb(c(Da,Db) ~ c(rep("t",length(Da)),rep("c",length(Db)))))$`Pr(>Chi)`[2]
-      options(warn=0)
-    }
-  }
+  p = do.test(Da,Db,test)
   
+  if (montecarlo)
+  {
+    if (cores > 1)
+    {
+      cl = makeCluster(cores)
+      clusterExport(cl, c("Da", "Db","test","do.test","montecarlo.core"),envir=environment())
+      p.empirical = parSapply(cl,1:nsim,function(x) montecarlo.core(Da,Db,test))
+      stopCluster(cl)
+    } else {
+      p.empirical = sapply(1:nsim, function(x,a=Da,b=Db,t=test) montecarlo.core(a,b,t))
+    }
+    pe = sum(p.empirical<=p)/nsim
+    return(pe)
+  }
+    
   return(p)
 }
 # -----------------------------
@@ -213,4 +221,34 @@ make_pathway_list = function(pathMsigDbFile) {
     		
   close(con)		
   return(pathway.list)		
+}
+
+
+do.test = function(Da,Db,ix)
+{
+  p = 1
+  if (sum(Da)>0 | sum(Db) > 0)
+  {
+    if (ix == 2)
+    {
+      p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
+    }
+    if (ix ==1){
+      options(warn=-1)
+      p = anova(glm.nb(c(Da,Db) ~ c(rep("t",length(Da)),rep("c",length(Db)))))$`Pr(>Chi)`[2]
+      options(warn=0)
+    }
+    if (ix == 3)
+    {
+      p = ks.test(Da,Db, alternative = 'greater', exact = F)$p.value
+    }
+  }
+  return(p)
+}
+
+montecarlo.core = function(Da,Db,test)
+{
+   D_rand<- sample(c(Da,Db),length(c(Da,Db)),replace = F)
+   p = do.test(Da = D_rand[1:length(Da)],Db = D_rand[(length(Da)+1):length(D_rand)],ix = test)
+   return(p)
 }

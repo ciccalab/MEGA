@@ -31,7 +31,6 @@ shinyServer(function(input, output) {
                 
                 if (montecarlo)
                 {
-                  source("./functions/MEGA_MC_libs.R")
                   cpus = detectCores()
                   if (!is.null(cpus))
                   {
@@ -39,8 +38,6 @@ shinyServer(function(input, output) {
                   } else {
                     cpus = 2
                   }
-                  
-                  load(paste("./RData/",genome,".gene.cds.length.RData",sep = ""))
                 }
                 
                 MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test, montecarlo, gene.cds.length, cpus)
