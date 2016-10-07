@@ -30,15 +30,14 @@ shinyServer(function(input, output) {
               if(!is.null(A) & !is.null(B) & !is.null(geneset) ){
                 
                 if (montecarlo)
+                  load(paste("./RData/",genome,".gene.cds.length.RData",sep = ""))
+                
+                cpus = detectCores()
+                if (!is.null(cpus))
                 {
-                  require(parallel)
-                  cpus = detectCores()
-                  if (!is.null(cpus))
-                  {
-                    cpus = cpus - 1
-                  } else {
-                    cpus = 2
-                  }
+                  cpus = cpus - 1
+                } else {
+                  cpus = 2
                 }
                 
                 MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test, montecarlo, gene.cds.length, cpus)

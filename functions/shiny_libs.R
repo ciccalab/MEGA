@@ -1,4 +1,5 @@
 require(MASS)
+require(parallel)
 
 # -----------------------------
 # FUNCTION: MEGA
@@ -45,7 +46,6 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
   
   # Execute the enrichement
   # ------------------------
-  
   withProgress(message = 'Running MEGA', value = 0, {
     #inc <- 1/(length(gene.sets)+1)
     p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test) {
@@ -58,6 +58,7 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
     res = data.frame("gene.set"=names(p),p.value=p,fdr= p.adjust(p,method = "fdr"),stringsAsFactors = F)
     setProgress(1)
   })
+  
   
   # Execute Bootstrapping if required
   # ----------------------------------
@@ -78,18 +79,11 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",mon
   # Execute Monte Carlo if required
   # ----------------------------------
   if (montecarlo) {
-    withProgress(message = 'Monte Carlo Simulations', value = 0, {
-      #inc <- 1/(length(gene.sets)+1)
-      p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test,ns=nsim,ncpu=cpus) {
-        incProgress(1/(length(gs)+1), detail = paste(x,"out of", length(gs)))
-        r = MEGA.core(A,B,gs[[x]],t,T,ncpu,ns)
-        names(r) = names(gs)[x]
-        return(r)
-      })
-      
-      res$MC.pval = p
-      setProgress(1)
-    })
+    res.mc = MEGA.MC(A,gene.sets,gene.cds.length,nsim,cpus)
+    res$MC.pvalue = NA
+    id1 = match(res$gene.set,res.mc$pathway)
+    id2 <- id1[!is.na(id1)]
+    res$MC.pvalue[!is.na(id1)] = res.mc$empirical.pvalue[id2]
   }
   
   rownames(res) = NULL
@@ -246,9 +240,66 @@ do.test = function(Da,Db,ix)
   return(p)
 }
 
-montecarlo.core = function(Da,Db,test)
+
+MEGA.MC.core = function(A,X)
 {
-   D_rand<- sample(c(Da,Db),length(c(Da,Db)),replace = F)
-   p = do.test(Da = D_rand[1:length(Da)],Db = D_rand[(length(Da)+1):length(D_rand)],ix = test)
-   return(p)
+  ix = A[,1] %in% X
+  if (sum(ix) > 0) {
+    A = A[ix,2:ncol(A)]
+    Da = apply(A,2,sum)
+  } else {
+    Da = matrix(data=0, nrow = 1, ncol = ncol(A))
+  }
+  return(Da)
 }
+
+shuffle.patient.mutations = function(A,gene.cds.length)
+{
+  csum <- colSums(A[,2:ncol(A)]*1)
+  random.mut.genes <- sapply(csum, function(x,y=gene.cds.length) sample(y$SYMBOL,size = x,replace = T,prob = y$prob))
+  A.random <- data.frame(symbol=unique(unlist(random.mut.genes)),stringsAsFactors = F)
+  A.random <- cbind(A.random,sapply(random.mut.genes, function(x,y=A.random$symbol) y %in% x)*1)
+  return(A.random)
+}
+
+MEGA.MC = function(A,gene.sets,gene.cds.length,nsim=1000,cores=2)
+{
+  if (cores > 1)
+  {
+    cl = makeCluster(cores)
+    clusterExport(cl, c("A", "gene.cds.length","MEGA.MC.core","shuffle.patient.mutations"),envir=environment())
+  }
+  
+  withProgress(
+    message = 'MC Simulations', value = 0,
+    {
+      Da.empirical.matrix <- matrix(data = 0,nrow = length(gene.sets),ncol = nsim)
+      rownames(Da.empirical.matrix) <- names(gene.sets)
+      for (i in 1:nsim)
+      {
+        incProgress(1/(nsim+2), detail = paste(i, "out of",nsim))
+        
+        A_rand <- shuffle.patient.mutations(A,gene.cds.length)
+        if (cores > 1) 
+        {
+          clusterExport(cl,"A_rand",envir=environment())
+          Da.empirical.matrix[,i] <- parSapply(cl,gene.sets,function(x) sum(MEGA.MC.core(A_rand,x)))
+        } else {
+          Da.empirical.matrix[,i] <- sapply(gene.sets, function(x,y=A_rand) sum(MEGA.MC.core(y,x)))
+        }
+      }
+      
+      incProgress(1/(nsim+1), detail = "merge results")
+      p.values <- sapply(1:length(gene.sets), function(x,y=Da.empirical.matrix,z=A,g=gene.sets) sum(y[x,] > sum(MEGA.MC.core(z,g[[x]]))))/nsim
+      res <- data.frame(pathway=names(gene.sets),empirical.pvalue=p.values,stringsAsFactors = F)
+      res <- res[order(res$empirical.pvalue),]
+      if (cores > 1)
+        stopCluster(cl)
+      
+      #res$MC.FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
+      
+    })
+  
+  return(res)
+}
+

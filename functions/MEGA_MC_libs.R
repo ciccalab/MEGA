@@ -29,39 +29,35 @@ MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
     clusterExport(cl, c("A", "gene.cds.length","MEGA.MC.core","shuffle.patient.mutations"),envir=environment())
   }
   
-  res <- NULL
-  
   withProgress(
   message = 'Monte Carlo Simulations', value = 0,
   {
-  for (i in 1:length(gene.sets))
+  Da.empirical.matrix <- matrix(data = 0,nrow = length(gene.sets),ncol = nsim)
+  rownames(Da.empirical.matrix) <- names(gene.sets)
+  for (i in 1:nsim)
   {
-    incProgress(1/(length(gene.sets)+1), detail = paste(i, "out of",length(gene.sets)))
+    #incProgress(1/(nsim+2), detail = paste(i, "out of",nsim))
     
-    X <- gene.sets[[i]]
-    Da <- sum(MEGA.MC.core(A,X))
-    if (Da > 0)
-    {
+    A_rand <- shuffle.patient.mutations(A,gene.cds.length)
       if (cores > 1) 
       {
-        clusterExport(cl,"X",envir=environment())
-        Da.empirical.distributions <- parSapply(cl,1:nsim,function(x) sum(MEGA.MC.core(shuffle.patient.mutations(A,gene.cds.length),X)))
+        clusterExport(cl,"A_rand",envir=environment())
+        Da.empirical.matrix[,i] <- parSapply(cl,gene.sets,function(x) sum(MEGA.MC.core(A_rand,x)))
       } else {
-        Da.empirical.distributions <- sapply(1:nsim, function(x,y=A,z=X,k=gene.cds.length) sum(MEGA.MC.core(shuffle.patient.mutations(y,k),z)))
+        Da.empirical.matrix[,i] <- sapply(gene.sets, function(x,y=A_rand) sum(MEGA.MC.core(y,x)))
       }
-      res <- rbind(res,data.frame(pathway=names(gene.sets)[i],empirical.pvalue=sum(Da.empirical.distributions>=Da)/nsim,stringsAsFactors = F))
-    } else {
-      res <- rbind(res,data.frame(pathway=names(gene.sets)[i],empirical.pvalue=1,stringsAsFactors = F))
-    }
-    #print(res)
   }
-  setProgress(1)
+  
+  incProgress(1/(nsim+1), detail = "merge results")
+  p.values <- sapply(1:length(gene.sets), function(x,y=Da.empirical.matrix,z=A,g=gene.sets) sum(y[x,] > sum(MEGA.MC.core(z,g[[x]]))))/nsim
+  res <- data.frame(pathway=names(gene.sets),empirical.pvalue=p.values,stringsAsFactors = F)
+  res <- res[order(res$empirical.pvalue),]
   
   if (cores > 1)
     stopCluster(cl)
   
-  #res$FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
-  res <- res[order(res$empirical.pvalue),]
+  res$MC.FDR <- p.adjust(res$empirical.pvalue,method = "fdr")
+  
   })
   
   return(res)
