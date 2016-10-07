@@ -11,12 +11,12 @@ appCSS <- ".mandatory_star { color: red; }"
 # Define UI for application that draws a histogram
 shinyUI(
   fluidPage(theme = shinytheme("united"),
-    navbarPage("MEGA-RVs",
+    navbarPage("MEGA-V",
 
-             tabPanel("MEGA-RVs",
+             tabPanel("MEGA-V",
 
-                      titlePanel("MEGA-RVs"),
-                      h4("Mutational Enrichment Gene set Analysis of Rare Variants"),
+                      titlePanel("MEGA-V"),
+                      h4("Mutational Enrichment Gene set Analysis of Variants"),
                       shinyjs::useShinyjs(),
                       shinyjs::inlineCSS(appCSS),
 
@@ -48,7 +48,7 @@ shinyUI(
                       titlePanel("Help page"),
                       withTags({
                         div(class="header", checked=NA,
-                            p("MEGA-RVs was developed to identify predefined gene
+                            p("MEGA-Vs was developed to identify predefined gene
                               sets (e.g. genes involved in the same pathway, or predisposing
                               to specific diseases) that show a significantly higher number
                               of mutations in a group of samples as compared to another
