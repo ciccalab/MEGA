@@ -19,7 +19,7 @@ shinyServer(function(input, output) {
               A             = read.delim(input$cohort_A$datapath, header=T, stringsAsFactors = F)
               B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
               gene.set.path = ifelse(!input$customGS,get.gene.set(as.numeric(input$gs_dataset)),input$gene_set$datapath)
-              geneset       = make_pathway_list(gene.set.path)
+              geneset       = read.gmt.file(gene.set.path)
               s.test        = input$stat.test
               fdr_th        = 0.1
               bootstrapping = input$bootstrapping=="True"
