@@ -85,7 +85,6 @@ Example 1: Use MEGA-V to identify altered gene sets using a control cohort
 > gene.sets.kegg = read.gmt.file("gene_sets/ncomm.cereda.186.KEGG.gmt")
 
 3. Load the two sets of patients with synchronous CRCs and individuals of 1000 Genomes Project. A and B: Data frame object containing the mutations counts. Columns = samples; rows = mutations. The first column must always contain the name of the mutated gene.
-
 > A <- read.delim("./example_dataset/ncomm.cereda.syCRCs.tsv.gz",stringsAsFactors = F)
 > B <- read.delim("./example_dataset/ncomm.cereda.1000.genomes.tsv.gz",stringsAsFactors = F)
 
