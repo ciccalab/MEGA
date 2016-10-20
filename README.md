@@ -6,7 +6,7 @@ Welcome to MEGA-V Repository
 
 MEGA-V (Mutation Enrichment Gene set Analysis of Variants) is a development of the method used in Cereda et al. (2016) Nature Comm. 7; doi:10.1038/ncomms12072.
 
-MEGA-V is a R application with a Shiny web interface that allows its execution from a web-based environment (section 4). The stand-alone version is also supported (section 5). Example files are provided (section 6).
+MEGA-V is a R application with a Shiny web interface that allows its execution from a web-based environment (section 4). The stand-alone version is also supported (section 5). Examples on how to use MEGA-V are provided (section 6).
 
 
 2. GNU General Public License
@@ -58,18 +58,15 @@ shiny::runGitHub('ciccalab/MEGA')
 5. How to run MEGA-V as a stand-alone app
 =========================================
 
-Clone the repository on your local machine and open R from the repository folder. Then, load the following files in the R Global Environment:
+Clone the repository on your local machine and open R from the repository folder. Load the following files in the R Global Environment:
 
 ``` 
 source(“functions/MEGA.R”)
 source(“functions/MEGA_MC_libs.R”)
 ```
 
-
-
-
-6. Example files to run MEGA-V
-===============================================
+6. Exemplar usage of MEGA-V
+===========================
 
 Two lists of 186 biological processes (ncomm.cereda.186.KEGG.gmt) and 346 disease-associated gene sets (ncomm.cereda.346.gwas.gmt) are provided in the folder ‘gene_sets’.
 
@@ -93,7 +90,7 @@ group of samples A as compared to B
 > r = MEGA(A,B,gene.sets.kegg, bootstrapping=TRUE, nsim=1000)
 ```
 
-Example 2: Use MEGA to identify altered gene sets without a control cohort
+Example 2: Use MEGA-V to identify altered gene sets without a control cohort
 ```
 1. Load the MEGA-V functions in the Global Environment
 > source("./functions/MEGA.R")
@@ -107,3 +104,4 @@ Example 2: Use MEGA to identify altered gene sets without a control cohort
 4. Run MEGA-V and identify which gene sets are significantly mutated in the group of samples A 
 > r = MEGA(A,gene.sets.kegg, montecarlo=TRUE, nsim=1000)
 ```
+
