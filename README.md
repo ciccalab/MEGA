@@ -102,6 +102,6 @@ Example 2: Use MEGA-V to identify altered gene sets without a control cohort
 > A <- read.delim("./example_dataset/ncomm.cereda.syCRCs.tsv.gz",stringsAsFactors = F)
 
 4. Run MEGA-V and identify which gene sets are significantly mutated in the group of samples A 
-> r = MEGA(A,gene.sets.kegg, montecarlo=TRUE, nsim=1000)
+> r = MEGA(A,gene.sets = gene.sets.kegg, montecarlo=TRUE, nsim=1000)
 ```
 
