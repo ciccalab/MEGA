@@ -61,8 +61,8 @@ shiny::runGitHub('ciccalab/MEGA')
 Clone the repository on your local machine and open R from the repository folder. Load the following files in the R Global Environment:
 
 ``` 
-source(“functions/MEGA.R”)
-source(“functions/MEGA_MC_libs.R”)
+source("functions/MEGA.R")
+source("functions/MEGA_MC_libs.R")
 ```
 
 6. Exemplar usage of MEGA-V
