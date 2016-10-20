@@ -43,46 +43,7 @@ shinyUI(
                           dataTableOutput('mega_results')
                          )
                        )
-             ),
-
-             tabPanel("Help",
-                      titlePanel("Help page"),
-                      withTags({
-                        div(class="header", checked=NA,
-                            p("MEGA-Vs was developed to identify predefined gene
-                              sets (e.g. genes involved in the same pathway, or predisposing
-                              to specific diseases) that show a significantly higher number
-                              of mutations in a group of samples as compared to another
-                              group of samples.")
-                        )}),
-                      withTags({
-                        div(class="body", checked=NA,
-                            h4("Arguments"),
-                            p(strong("A and B")," are data frame objects contaning the mutations counts. Coloums are samples, while rows are mutations. The first coloumn must always contain the name of the gene in which the mutation fall."),
-                            p("Example:"),
-                            p("Symbol\tS1\tS2\tS3"),
-                            p("GeneA\t1\t0\t0"),
-                            p("GeneB\t1\t0\t1"),
-                            p("GeneC\t0\t0\t1"),
-                            p("GeneD\t0\t1\t0"),
-                            p("GeneE\t1\t1\t1"),
-                            p(strong("gene.sets")," = List of gene sets. Each element of the list is set of genes and
-                              the name of each element of the list must be the name of the gene set."),
-                            p("Example:"),
-                            p(code("gene.sets = list(g1=c('MAST2','ABCA10','ASPM'),g2=c('TP53','ZNF572','MYC'))")),
-
-                            p(strong("fdr_th")," = false discovery rate threshold (default is 0.1)"),
-
-                            p(strong("bootstrapping"), " = If equal to true the bootstrapping strategy is performed
-                              to assess the effect of the sample size"),
-
-                            p(strong("nsim")," = number of iterations used in the bootsrapping strategy (default is 1000)")
-                        )})
-
-
-
-
-                      )
+             )
 
     )
   )
