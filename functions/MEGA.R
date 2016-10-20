@@ -39,7 +39,7 @@
 # 
 # nsim: number of iterations used in the bootsrapping strategy (default is 1000)
 #
-MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000,test="W") {
+MEGA = function(A,B=NULL,gene.sets,fdr_th=0.1,bootstrapping=F,montecarlo=F,MC.genome="HG19",nsim=1000,test="W") {
   # print info
   # -----------
   print.logo()
@@ -54,7 +54,17 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000,test="W") {
     cat("Bootstrapping: NO\n")
     cat("Number of iterations: 0\n")
   }
+  if (montecarlo) {
+    cat("Monte Carlo: YES\n")
+    cat("Number of iterations:",nsim,"\n")
+  } else {
+    cat("Monte Carlo: NO\n")
+    cat("Number of iterations: 0\n")
+  }
   cat("========================================\n")
+  
+  if (!montecarlo)
+  {
   
   cat("\nStep 1: Mutation Gene Set Enrichement Analysis\n")
   
@@ -88,10 +98,29 @@ MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000,test="W") {
       cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
     }
   } 
+  }
+  
+  if (montecarlo)
+  {
+    require(parallel)
+    load(paste("./RData/",MC.genome,".gene.cds.length.RData",sep = ""))
+    cpus = detectCores()
+    if (!is.null(cpus))
+    {
+      cpus = cpus - 1
+    } else {
+      cpus = 2
+    }
+    res = MEGA.MC(A,gene.sets,gene.cds.length,nsim,cpus)
+    res$fdr = p.adjust(res$p.value,method = "fdr")
+  }
   
   cat("\n\nResults:\n")
   cat("Significant Gene sets before FDR:",sum(res$p.value<0.05),"\n")
   cat("Significant Gene sets after FDR:",sum(res$fdr<fdr_th),"\n")
+  
+  rownames(res) = NULL
+  res = res[order(res$fdr),]
   
   return(res)
 }
@@ -193,3 +222,81 @@ print.logo = function() {
   cat("|__|  |__| |_______| \\______| /__/     \\__\\ \n")
 }
 
+
+read.gmt.file = function(pathMsigDbFile) {		
+  inputFile <- pathMsigDbFile		
+  con  <- file(inputFile, open = "r")		
+  
+  c = 1		
+  pathway.list <- vector(mode="list",length=0)		
+  while (length(oneLine <- readLines(con, n = 1, warn = FALSE)) > 0)
+  {		
+    myVector <- do.call("rbind",strsplit(oneLine, "\t"))		
+    t = vector(mode="list",length=1)		
+    t[[1]] = myVector[3:length(myVector)]		
+    names(t) = myVector[1]		
+    pathway.list = c(pathway.list,t)		
+    c = c+1		
+  }		
+  
+  close(con)		
+  return(pathway.list)		
+}
+
+MEGA.MC.core = function(A,X)
+{
+  ix = A[,1] %in% X
+  if (sum(ix) > 0) {
+    A = A[ix,2:ncol(A)]
+    Da = apply(A,2,sum)
+  } else {
+    Da = matrix(data=0, nrow = 1, ncol = ncol(A))
+  }
+  return(Da)
+}
+
+shuffle.patient.mutations = function(A,gene.cds.length)
+{
+  csum <- colSums(A[,2:ncol(A)]*1)
+  random.mut.genes <- sapply(csum, function(x,y=gene.cds.length) sample(y$SYMBOL,size = x,replace = T,prob = y$prob))
+  A.random <- data.frame(symbol=unique(unlist(random.mut.genes)),stringsAsFactors = F)
+  A.random <- cbind(A.random,sapply(random.mut.genes, function(x,y=A.random$symbol) y %in% x)*1)
+  return(A.random)
+}
+
+MEGA.MC = function(A,gene.sets,gene.cds.length,th=0.05,nsim=1000,cores=2)
+{
+  print("Performing Monte Carlo Permutations...")
+  print(paste("Number of Cores using:",cores))
+  
+  if (cores > 1)
+  {
+    cl = makeCluster(cores)
+    clusterExport(cl, c("A", "gene.cds.length","MEGA.MC.core","shuffle.patient.mutations"),envir=environment())
+  }
+  
+  
+  Da.empirical.matrix <- matrix(data = 0,nrow = length(gene.sets),ncol = nsim)
+  rownames(Da.empirical.matrix) <- names(gene.sets)
+  for (i in 1:nsim)
+  {
+    A_rand <- shuffle.patient.mutations(A,gene.cds.length)
+    if (cores > 1) 
+    {
+      clusterExport(cl,"A_rand",envir=environment())
+      Da.empirical.matrix[,i] <- parSapply(cl,gene.sets,function(x) sum(MEGA.MC.core(A_rand,x)))
+    } else {
+      Da.empirical.matrix[,i] <- sapply(gene.sets, function(x,y=A_rand) sum(MEGA.MC.core(y,x)))
+    }
+  }
+  p.values <- sapply(1:length(gene.sets), function(x,y=Da.empirical.matrix,z=A,g=gene.sets) sum(y[x,] > sum(MEGA.MC.core(z,g[[x]]))))/nsim
+  res <- data.frame(pathway=names(gene.sets),empirical.pvalue=p.values,stringsAsFactors = F)
+  res <- res[order(res$empirical.pvalue),]
+
+  if (cores > 1)
+      stopCluster(cl)
+  
+  colnames(res) <- c("pathway","p.value")
+  
+  return(res)
+}
