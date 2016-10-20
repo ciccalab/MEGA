@@ -147,7 +147,7 @@ MEGA.core = function(A,B,X,test="W") {
   {
     p = wilcox.test(Da,Db,alternative = "greater",exact = F)$p.value
   } else {
-    p = anova(glm.nb(c(Da,Db) ~ c(rep("t",length(Da)),rep("c",length(Db)))))$`Pr(>Chi)`[2]
+    p = ks.test(Da,Db, alternative = "less", exact = F)$p.value
   }
   return(p)
 }
