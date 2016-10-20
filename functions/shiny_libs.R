@@ -44,46 +44,46 @@ require(parallel)
 #
 MEGA = function(A,B,gene.sets,fdr_th=0.1,bootstrapping=F,nsim=1000, test="W",montecarlo=F,gene.cds.length=NULL,cpus=2) {
   
-  # Execute the enrichement
-  # ------------------------
-  withProgress(message = 'Running MEGA', value = 0, {
-    #inc <- 1/(length(gene.sets)+1)
-    p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test) {
-      incProgress(1/(length(gs)+1), detail = paste(x,"out of", length(gs)))
-      r = MEGA.core(A,B,gs[[x]],t)
-      names(r) = names(gs)[x]
-      return(r)
+  if (!montecarlo)
+  {
+    # Execute the enrichement
+    # ------------------------
+    withProgress(message = 'Running MEGA', value = 0, {
+      #inc <- 1/(length(gene.sets)+1)
+      p = sapply(1:length(gene.sets), function(x,z=inc,a=A,b=B,gs=gene.sets,t=test) {
+        incProgress(1/(length(gs)+1), detail = paste(x,"out of", length(gs)))
+        r = MEGA.core(A,B,gs[[x]],t)
+        names(r) = names(gs)[x]
+        return(r)
+      })
+      
+      res = data.frame("gene.set"=names(p),p.value=p,fdr= p.adjust(p,method = "fdr"),stringsAsFactors = F)
+      setProgress(1)
     })
     
-    res = data.frame("gene.set"=names(p),p.value=p,fdr= p.adjust(p,method = "fdr"),stringsAsFactors = F)
-    setProgress(1)
-  })
-  
-  
-  # Execute Bootstrapping if required
-  # ----------------------------------
-  if (bootstrapping) {
-    if (sum(res$fdr<fdr_th)) {
-      bs = MEGA.bootstrapping(A,B,gene.sets[res$gene.set[res$fdr<fdr_th]],nsim,test)
-      res$success_percentage = NA
-      if (!is.null(dim(bs))) {
-        res$success_percentage[res$fdr<fdr_th] = apply(bs, 1, function(x,n=nsim) sum(x<0.05)*100/n)
+    
+    # Execute Bootstrapping if required
+    # ----------------------------------
+    if (bootstrapping) {
+      if (sum(res$fdr<fdr_th)) {
+        bs = MEGA.bootstrapping(A,B,gene.sets[res$gene.set[res$fdr<fdr_th]],nsim,test)
+        res$success_percentage = NA
+        if (!is.null(dim(bs))) {
+          res$success_percentage[res$fdr<fdr_th] = apply(bs, 1, function(x,n=nsim) sum(x<0.05)*100/n)
+        } else {
+          res$success_percentage[res$fdr<fdr_th] = sum(bs<0.05)*100/nsim
+        }
       } else {
-        res$success_percentage[res$fdr<fdr_th] = sum(bs<0.05)*100/nsim
+        cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
       }
-    } else {
-      cat("\n\n Step 2: Bootstrapping can not be performed. No significant gene sets\n")
     }
   }
   
   # Execute Monte Carlo if required
   # ----------------------------------
   if (montecarlo) {
-    res.mc = MEGA.MC(A,gene.sets,gene.cds.length,nsim,cpus)
-    res$MC.pvalue = NA
-    id1 = match(res$gene.set,res.mc$pathway)
-    id2 <- id1[!is.na(id1)]
-    res$MC.pvalue[!is.na(id1)] = res.mc$empirical.pvalue[id2]
+    res = MEGA.MC(A,gene.sets,gene.cds.length,nsim,cpus)
+    res$fdr = p.adjust(res$empirical.pvalue,method = "fdr")
   }
   
   rownames(res) = NULL

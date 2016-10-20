@@ -17,17 +17,20 @@ shinyServer(function(input, output) {
 
       RUN = eventReactive(input$submit, {
               A             = read.delim(input$cohort_A$datapath, header=T, stringsAsFactors = F)
-              B             = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
+              B             = NULL
               gene.set.path = ifelse(!input$customGS,get.gene.set(as.numeric(input$gs_dataset)),input$gene_set$datapath)
               geneset       = read.gmt.file(gene.set.path)
               s.test        = input$stat.test
               fdr_th        = 0.1
               bootstrapping = input$bootstrapping=="True"
-              montecarlo    = input$motecarlo=="True"
+              montecarlo    = input$stat.test==4
               nsim          = input$nsim
               genome        = input$genome
               
-              if(!is.null(A) & !is.null(B) & !is.null(geneset) ){
+              if (!montecarlo)
+                B = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
+              
+              if(!is.null(A) & (montecarlo | !is.null(B)) & !is.null(geneset) ){
                 
                 if (montecarlo)
                   load(paste("./RData/",genome,".gene.cds.length.RData",sep = ""))
