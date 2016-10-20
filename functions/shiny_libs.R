@@ -194,7 +194,7 @@ MEGA.bootstrapping = function(A,B,gene.sets,nsim,test="W") {
 }
 
 get.gene.set = function(ix) {
-  c("./gene_sets/c2.cp.kegg.v5.1.symbols.gmt","./gene_sets/c5.bp.v5.1.symbols.gmt","./gene_sets/c5.cc.v5.1.symbols.gmt","./gene_sets/c5.mf.v5.1.symbols.gmt","./gene_sets/c2.cp.reactome.v5.1.symbols.gmt","./gene_sets/c2.cp.biocarta.v5.1.symbols.gmt","./gene_sets/c1.positional.v5.1.symbols.gmt","./gene_sets/h.all.v5.1.symbols.gmt","./gene_sets/c3.tft.v5.1.symbols.gmt","./gene_sets/c4.cgn.v5.1.symbols.gmt","./gene_sets/c4.cm.v5.1.symbols.gmt","./gene_sets/c6.all.v5.1.symbols.gmt","./gene_sets/ncomm.cereda.gwas.symbols.gmt")[ix]
+  c("./gene_sets/msigdb/c2.cp.kegg.v5.1.symbols.gmt","./gene_sets/msigdb/c5.bp.v5.1.symbols.gmt","./gene_sets/msigdb/c5.cc.v5.1.symbols.gmt","./gene_sets/msigdb/c5.mf.v5.1.symbols.gmt","./gene_sets/msigdb/c2.cp.reactome.v5.1.symbols.gmt","./gene_sets/msigdb/c2.cp.biocarta.v5.1.symbols.gmt","./gene_sets/msigdb/c1.positional.v5.1.symbols.gmt","./gene_sets/msigdb/h.all.v5.1.symbols.gmt","./gene_sets/msigdb/c3.tft.v5.1.symbols.gmt","./gene_sets/msigdb/c4.cgn.v5.1.symbols.gmt","./gene_sets/msigdb/c4.cm.v5.1.symbols.gmt","./gene_sets/msigdb/c6.all.v5.1.symbols.gmt","./gene_sets/ncomm.cereda.346.gwas.gmt")[ix]
 }
 
 read.gmt.file = function(pathMsigDbFile) {		
@@ -234,7 +234,7 @@ do.test = function(Da,Db,ix)
     }
     if (ix == 3)
     {
-      p = ks.test(Da,Db, alternative = 'greater', exact = F)$p.value
+      p = ks.test(Da,Db, alternative = 'less', exact = F)$p.value
     }
   }
   return(p)
