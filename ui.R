@@ -35,7 +35,10 @@ shinyUI(
                                  numericInput("nsim", "Number of random sampling (Monte Carlo or Bootstrapping)", value=1000),
                                  p("Mandatory fields are marked with *"),
                                  actionButton("submit", "Run MEGA-RVs", class = "btn-primary"),
-                                 downloadButton('downloadData', 'Download Results')
+                                 downloadButton('downloadData', 'Download Results'),
+                                 p(""),
+                                 p("Download the example cohorts A and B:"),
+                                 downloadButton('downloadExample', 'Download Example Datasets')
                                ),
 
                         # MAIN PANEL

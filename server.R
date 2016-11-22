@@ -26,15 +26,15 @@ shinyServer(function(input, output) {
               montecarlo    = input$stat.test==4
               nsim          = input$nsim
               genome        = input$genome
-              
+
               if (!montecarlo)
                 B = read.delim(input$cohort_B$datapath, header=T, stringsAsFactors = F)
-              
+
               if(!is.null(A) & (montecarlo | !is.null(B)) & !is.null(geneset) ){
-                
+
                 if (montecarlo)
                   load(paste("./RData/",genome,".gene.cds.length.RData",sep = ""))
-                
+
                 cpus = detectCores()
                 if (!is.null(cpus))
                 {
@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
                 } else {
                   cpus = 2
                 }
-                
+
                 MEGA(A, B, geneset, fdr_th, bootstrapping, nsim, s.test, montecarlo, gene.cds.length, cpus)
               }
 
@@ -55,7 +55,7 @@ shinyServer(function(input, output) {
         current$res = results
         DT::datatable(results, options = list(orderClasses = TRUE, pageLength = 15),selection= 'single',rownames = FALSE)
       })
-       
+
 
        output$downloadData <- downloadHandler(
 
@@ -65,5 +65,18 @@ shinyServer(function(input, output) {
          content = function(con) {
            write.table(current$res,con,col.names = T, row.names = F, quote = F, sep="\t")
          }
+       )
+
+       output$downloadExample <- downloadHandler(
+         filename = function(){
+           "Example_dataset.zip"
+         },
+         content = function(con){
+            filesToSave <- c( "example_dataset/ncomm.cereda.syCRCs.tsv.gz"
+                            ,"example_dataset/ncomm.cereda.1000.genomes.tsv.gz")
+
+           zip(zipfile=con, files = filesToSave)
+         },
+         contentType = "application/zip"
        )
   })
