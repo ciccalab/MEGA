@@ -4,10 +4,13 @@ Welcome to MEGA-V Repository
 1. General Notes and How to cite MEGA-V
 =======================================
 
-MEGA-V (Mutation Enrichment Gene set Analysis of Variants) is a development of the method used in Cereda et al. (2016) Nature Comm. 7; doi:10.1038/ncomms12072.
+MEGA-V (Mutation Enrichment Gene set Analysis of Variants) is a development of the method used in Cereda et al. (2016) Nature Comm. 7; doi:10.1038/ncomms12072 and pubblished by Gambardella et al. in Bioinformatics (2016); doi:10.1093/bioinformatics/btw809.
 
 MEGA-V is a R application with a Shiny web interface that allows its execution from a web-based environment (section 4). The stand-alone version is also supported (section 5). Examples on how to use MEGA-V are provided (section 6).
 
+How to cite MEGA-V:
+Gambardella et al (2016) Bioinformatics; doi:10.1093/bioinformatics/btw809
+Cereda et al. (2016) Nature Comm. 7; doi:10.1038/ncomms12072
 
 2. GNU General Public License
 =============================
